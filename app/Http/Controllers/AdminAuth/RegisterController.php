@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\AdminAuth;
 
-use App\User;
+use App\AdminUser;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Auth;
 
 class RegisterController extends Controller
 {
@@ -27,7 +28,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/admin-home';
 
     /**
      * Create a new controller instance.
@@ -62,10 +63,32 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        return AdminUser::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
     }
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm()
+    {
+        return view('admin-auth.register');
+    }
+
+    /**
+     * Get the guard to be used during registration.
+     *
+     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     */
+    protected function guard()
+    {
+        return Auth::guard('admin_user');
+    }
+
+
 }
